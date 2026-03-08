@@ -6,8 +6,13 @@
     "start": "node src/app.js"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^5.1.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "sqlite3": "^5.1.7"
-  }
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
