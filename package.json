@@ -6,6 +6,7 @@
     "doc": "docs"
   },
   "scripts": {
+    "start": "concurrently \"npm run start --prefix backend\" \"npx vite --cwd frontend\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,5 +25,8 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
