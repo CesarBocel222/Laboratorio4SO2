@@ -27,6 +27,8 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^9.2.1",
+    "eslint": "^10.0.3"
   }
 }
