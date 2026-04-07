@@ -1,0 +1,48 @@
+name: CI Pipeline
+
+on: 
+  push:
+    branches: [main, angie, feature/ci-workflow]
+  pull_request:
+    branches: [main, angie]
+
+jobs:
+  ci-pipeline:
+    name: Pipeline CI 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v6
+        with: 1
+          fetch-depth: 0
+
+      - name: Preparar entorno Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            backend/package-lock.json
+            frontend/package-lock.json
+          
+      - name: Instalar dependencias
+        run: |
+          npm ci
+          npm ci --prefix backend
+          npm ci --prefix frontend
+      
+      - name: Ejecutar pruebas unitarias
+        run: npm run test
+
+      - name: Ejecutar linter
+        run: npm run lint
+
+      - name: SonarQube Cloud Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        env: 
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: .
+      
