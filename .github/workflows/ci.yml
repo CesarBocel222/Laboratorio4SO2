@@ -2,7 +2,7 @@ name: CI Pipeline - Laboratorio 6
 
 on:
   push:
-    branches: ["angie"]
+    branches: ["angie", "integracion-final-lab6"]
   pull_request:
     branches: ["angie"]
 
