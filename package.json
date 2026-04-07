@@ -6,8 +6,21 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "concurrently \"npm run start --prefix backend\" \"npx vite --cwd frontend\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:backend": "npm run start --prefix backend",
+    "start:frontend": "npm run start --prefix frontend",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+
+    "install:backend": "npm install --prefix backend",
+    "install:frontend": "npm install --prefix frontend",
+    "install:all": "npm install && npm run install:backend && npm run install:frontend",
+
+    "test": "npm test --prefix backend",
+
+    "lint": "npx eslint backend/src --ext /.js",
+    "lint:frontend": "npx eslint frontend/src --ext /.js,.jsx",
+    "lint:all": "npm run lint && npm run lint:frontend",
+
+    "ci": "npm run test && npm run lint:all"
   },
   "repository": {
     "type": "git",
@@ -22,6 +35,7 @@
   "homepage": "https://github.com/CesarBocel222/Laboratorio4SO2#readme",
   "description": "",
   "dependencies": {
+    "all": "^0.0.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "sqlite3": "^5.1.7"
@@ -30,5 +44,8 @@
     "@eslint/js": "^10.0.1",
     "concurrently": "^9.2.1",
     "eslint": "^10.0.3"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.60.1"
   }
 }

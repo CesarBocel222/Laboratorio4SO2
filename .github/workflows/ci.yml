@@ -1,0 +1,39 @@
+name: CI Pipeline - Laboratorio 6
+
+on:
+  push:
+    branches: ["angie", "integracion-final-lab6"]
+  pull_request:
+    branches: ["angie"]
+
+jobs:
+  build-test-analyze:
+    name: Build, Test & SonarCloud Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout del código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 2. Setup de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20" 
+          cache: 'npm'
+
+      - name: 3. Instalar TODAS las dependencias
+        run: npm run install:all
+
+      - name: 4. Ejecutar Pruebas Unitarias (Backend)
+        run: npm run test
+        
+      - name: 5. Análisis Estático (Lint)
+        run: npm run lint:all
+
+      - name: 6. SonarQube Cloud Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
