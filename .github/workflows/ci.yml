@@ -1,46 +1,38 @@
-name: CI Pipeline - Laboratorio4SO2
+name: CI Pipeline - Laboratorio 6
 
 on:
   push:
-    branches: ["angie"]  
+    branches: ["angie"]
   pull_request:
-    branches: ["angie"] 
+    branches: ["angie"]
+
 jobs:
-  build-and-analyze:
+  build-test-analyze:
     name: Build, Test & SonarCloud Analysis
     runs-on: ubuntu-latest
 
     steps:
-      - name: 1. Checkout code
+      - name: 1. Checkout del código
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 2. Setup Node.js
+      - name: 2. Setup de Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20" 
+          cache: 'npm'
 
-      - name: 3. Instalar dependencias (frontend)
-        working-directory: ./frontend
-        run: npm install
+      - name: 3. Instalar TODAS las dependencias
+        run: npm run install:all
 
-      - name: 4. Instalar dependencias (backend)
-        working-directory: ./backend
-        run: npm install
+      - name: 4. Ejecutar Pruebas Unitarias (Backend)
+        run: npm run test
+        
+      - name: 5. Análisis Estático (Lint)
+        run: npm run lint:all
 
-      - name: 5. Pruebas unitarias (frontend)
-        working-directory: ./frontend
-        run: npm test -- --watchAll=false --coverage
-
-      - name: 6. Pruebas unitarias (backend)
-        working-directory: ./backend
-        run: npm test
-
-      - name: 7. Análisis estático ESLint
-        run: npx eslint . --ext .js,.jsx --max-warnings=0
-
-      - name: 8. SonarQube Cloud Scan
+      - name: 6. SonarQube Cloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
