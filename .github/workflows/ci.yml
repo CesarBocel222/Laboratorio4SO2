@@ -1,48 +1,47 @@
-name: CI Pipeline
+name: CI Pipeline - Laboratorio4SO2
 
-on: 
+on:
   push:
-    branches: [main, angie, feature/ci-workflow]
+    branches: ["angie"]  
   pull_request:
-    branches: [main, angie]
-
+    branches: ["angie"] 
 jobs:
-  ci-pipeline:
-    name: Pipeline CI 
+  build-and-analyze:
+    name: Build, Test & SonarCloud Analysis
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout del código
-        uses: actions/checkout@v6
-        with: 1
+      - name: 1. Checkout code
+        uses: actions/checkout@v4
+        with:
           fetch-depth: 0
 
-      - name: Preparar entorno Node.js
-        uses: actions/setup-node@v6
+      - name: 2. Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 24
-          cache: 'npm'
-          cache-dependency-path: |
-            package-lock.json
-            backend/package-lock.json
-            frontend/package-lock.json
-          
-      - name: Instalar dependencias
-        run: |
-          npm ci
-          npm ci --prefix backend
-          npm ci --prefix frontend
-      
-      - name: Ejecutar pruebas unitarias
-        run: npm run test
+          node-version: "18"
 
-      - name: Ejecutar linter
-        run: npm run lint
+      - name: 3. Instalar dependencias (frontend)
+        working-directory: ./frontend
+        run: npm install
 
-      - name: SonarQube Cloud Scan
-        uses: SonarSource/sonarqube-scan-action@v7
-        env: 
+      - name: 4. Instalar dependencias (backend)
+        working-directory: ./backend
+        run: npm install
+
+      - name: 5. Pruebas unitarias (frontend)
+        working-directory: ./frontend
+        run: npm test -- --watchAll=false --coverage
+
+      - name: 6. Pruebas unitarias (backend)
+        working-directory: ./backend
+        run: npm test
+
+      - name: 7. Análisis estático ESLint
+        run: npx eslint . --ext .js,.jsx --max-warnings=0
+
+      - name: 8. SonarQube Cloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          projectBaseDir: .
-      
