@@ -3,9 +3,6 @@ const cors = require('cors');
 const db = require('./db/connection');
 const ventaRoutes = require('./routes/ventaRoutes');
 
-// codigo malo intencional - demo falla
-eval("console.log('codigo malo')");
-var x = 1; var x = 2; var x = 3;
 
 const app = express();
 app.use(cors());
